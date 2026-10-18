@@ -1,66 +1,56 @@
-/* Task 1: Space-Bot Vital Scanner */
 #include <stdio.h>
 
 int main(void)
 {
-    double temperature;
-    int pulse;
-    double oxygen;
-    int failCount = 0;
-    int tempFail = 0;
-    int pulseFail = 0;
-    int oxygenFail = 0;
+    char fuel;
+    double distance;
+    double weight;
+    double rate = 0.0;
+    double cost;
 
-    if (scanf("%lf %d %lf", &temperature, &pulse, &oxygen) != 3)
+    if (scanf(" %c %lf %lf", &fuel, &distance, &weight) != 3)
     {
-        printf("Scanner malfunction!\n");
+        printf("Mission aborted — invalid data!\n");
         return 0;
     }
 
-    /* Reject impossible readings first */
-    if (temperature <= 0 || pulse <= 0 || oxygen < 0 || oxygen > 100)
+    /* Accept lowercase codes too */
+    if (fuel == 'A' || fuel == 'a')
     {
-        printf("Scanner malfunction!\n");
+        rate = 5.0;
+    }
+    else if (fuel == 'B' || fuel == 'b')
+    {
+        rate = 3.0;
+    }
+    else if (fuel == 'C' || fuel == 'c')
+    {
+        rate = 7.0;
+    }
+    else
+    {
+        printf("Mission aborted — invalid data!\n");
         return 0;
     }
 
-    /* Standard ranges: temp 36.0-38.0 C, pulse 60-100 bpm, oxygen 95-100 % */
-    if (temperature < 36.0 || temperature > 38.0)
+    if (distance <= 0 || weight < 0)
     {
-        tempFail = 1;
-        failCount++;
-    }
-    if (pulse < 60 || pulse > 100)
-    {
-        pulseFail = 1;
-        failCount++;
-    }
-    if (oxygen < 95.0)
-    {
-        oxygenFail = 1;
-        failCount++;
+        printf("Mission aborted — invalid data!\n");
+        return 0;
     }
 
-    if (failCount == 0)
+    cost = rate * distance;
+
+    if (weight > 1000)
     {
-        printf("All systems healthy — robot cleared!\n");
+        cost = cost * 1.40;
     }
-    else if (failCount >= 2)
+    else if (weight > 500)
     {
-        printf("Critical condition — send to repair bay!\n");
+        cost = cost * 1.20;
     }
-    else if (tempFail)
-    {
-        printf("Temperature alert — run cooling subroutine.\n");
-    }
-    else if (pulseFail)
-    {
-        printf("Pulse alert — check motor circuits.\n");
-    }
-    else if (oxygenFail)
-    {
-        printf("Oxygen alert — replace battery pack.\n");
-    }
+
+    printf("Fuel cost: %.2f credits\n", cost);
 
     return 0;
 }
